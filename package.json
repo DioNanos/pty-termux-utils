@@ -1,6 +1,6 @@
 {
   "name": "@mmmbuto/pty-termux-utils",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Shared PTY utilities for Termux/Android with graceful fallback",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -13,7 +13,8 @@
   },
   "type": "module",
   "optionalDependencies": {
-    "@mmmbuto/node-pty-android-arm64": "~1.1.0"
+    "@mmmbuto/node-pty-android-arm64": "~1.1.0",
+    "@lydell/node-pty-linux-arm64": "~1.2.0-beta.2"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -31,10 +32,10 @@
     "node-pty",
     "terminal"
   ],
-  "author": "DAG <dev@mmmbuto.com>",
+  "author": "DioNanos",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mmmbuto/pty-termux-utils.git"
+    "url": "https://github.com/DioNanos/pty-termux-utils.git"
   }
 }

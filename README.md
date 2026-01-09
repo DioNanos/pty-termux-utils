@@ -8,7 +8,7 @@
 
 ## Overview
 
-`@mmmbuto/pty-termux-utils` is a shared library that provides unified PTY management for Termux/Android environments. It offers native PTY support via `@mmmbuto/node-pty-android-arm64` with graceful fallback to `child_process` when unavailable. Type-safe, ESM+CJS compatible, and with consistent debug logging.
+`@mmmbuto/pty-termux-utils` is a shared library that provides unified PTY management for Termux/Android and Linux ARM64 environments. It offers native PTY support via `@mmmbuto/node-pty-android-arm64` or `@lydell/node-pty-linux-arm64` with graceful fallback to `child_process` when unavailable. Type-safe, ESM+CJS compatible, and with consistent debug logging.
 
 ---
 
@@ -20,12 +20,30 @@
 
 ## Features
 
-- **Native PTY Support** — Uses `@mmmbuto/node-pty-android-arm64` prebuild on Termux/Android
+- **Multi-Provider PTY** — Native PTY support for Termux and Linux ARM64
 - **Graceful Fallback** — Degrades to `child_process` adapter when native PTY unavailable
 - **Type-Safe** — PTY types defined internally, no dependency on optional module
 - **Memoized Loading** — Native module loaded once per process
 - **Consistent Logging** — `[PTY]` prefix, debug-only via `PTY_DEBUG=1`
 - **ESM + CJS** — Works with both TypeScript (ESM) and CommonJS (CJS) projects
+
+## PTY Providers
+
+| Priority | Platform | Provider | Module | Version |
+|----------|-----------|----------|---------|----------|
+| 1 | Termux | Native | `@mmmbuto/node-pty-android-arm64` | ~1.1.0 |
+| 2 | Linux ARM64 | Native | `@lydell/node-pty-linux-arm64` | ~1.2.0-beta.2 |
+| 3 | All platforms | Fallback | `child_process` adapter | built-in |
+
+### Platform Detection
+
+```typescript
+// Termux detection
+process.platform === 'android' || process.env.PREFIX?.includes('com.termux')
+
+// Linux ARM64 detection
+process.platform === 'linux' && process.arch === 'arm64'
+```
 
 ## Installation
 
@@ -35,13 +53,17 @@ npm install @mmmbuto/pty-termux-utils
 
 ### Optional Native PTY
 
-For native PTY support on Termux/Android:
+For native PTY support:
 
 ```bash
+# Termux
 npm install @mmmbuto/node-pty-android-arm64@~1.1.0
+
+# Linux ARM64
+npm install @lydell/node-pty-linux-arm64@~1.2.0-beta.2
 ```
 
-This is an **optional dependency** — the library works without it.
+These are **optional dependencies** — the library works without them.
 
 ## Usage
 
@@ -53,6 +75,7 @@ import { getPty, spawnPty } from '@mmmbuto/pty-termux-utils';
 // Get PTY implementation
 const pty = await getPty();
 if (pty) {
+  console.log('Using provider:', pty.name); // 'mmmbuto-node-pty' or 'lydell-node-pty-linux-arm64'
   const proc = pty.module.spawn('bash', ['-c', 'echo test'], { cols: 80, rows: 24 });
   proc.on('data', (data) => console.log(data));
   proc.on('exit', (code, signal) => console.log(`Exit: ${code}`));
@@ -77,6 +100,7 @@ const pty = await getPty();
 let proc;
 
 if (pty) {
+  console.log('Using provider:', pty.name);
   proc = pty.module.spawn('bash', ['-c', 'echo test'], { cols: 80, rows: 24 });
 } else {
   const adapter = createFallbackAdapter();
@@ -111,8 +135,9 @@ PTY_DEBUG=1 npm run start
 Output:
 ```
 [PTY] Native module loaded: @mmmbuto/node-pty-android-arm64
+[PTY] Using provider: mmmbuto-node-pty
+[PTY] Native module not found, using fallback adapter
 [PTY] Using fallback PTY adapter with child_process
-[PTY] Failed to initialize PTY system: Error: ...
 ```
 
 ## API
@@ -134,6 +159,7 @@ Create a fallback adapter using `child_process`.
 - `IPty` — PTY process interface
 - `IPtyNativeImplementation` — Native module interface
 - `PtyImplementation` — Union type for loaded implementation
+- `PtyProviderName` — Provider name union (`'mmmbuto-node-pty' | 'lydell-node-pty-linux-arm64'`)
 - `PtyError` — Error with specific codes (`NATIVE_NOT_FOUND`, `NATIVE_INVALID_EXPORT`, `SPAWN_FAILED`, `RESIZE_FAILED`)
 
 ## Architecture
@@ -141,8 +167,8 @@ Create a fallback adapter using `child_process`.
 ### Core Components
 
 1. **`getPty.ts`** — PTY Detection & Loading
-   - Detects Android/Termux environment
-   - Dynamic import of native module
+   - Multi-provider strategy with priority
+   - Dynamic import of native modules
    - Memoizes result (cached after first call)
    - Validates `spawn` function exists
 
@@ -154,6 +180,7 @@ Create a fallback adapter using `child_process`.
 
 3. **`types.ts`** — Type Definitions
    - Type-safe PTY interfaces
+   - Multi-provider name union
    - No dependency on optional module
 
 4. **`errors.ts`** — Error Handling
@@ -187,11 +214,12 @@ import type { IPty } from '@mmmbuto/node-pty-android-arm64';
 import type { IPty } from '@mmmbuto/pty-termux-utils';
 ```
 
-4. Keep optional dependency:
+4. Keep optional dependencies:
 ```json
 {
   "optionalDependencies": {
-    "@mmmbuto/node-pty-android-arm64": "~1.1.0"
+    "@mmmbuto/node-pty-android-arm64": "~1.1.0",
+    "@lydell/node-pty-linux-arm64": "~1.2.0-beta.2"
   }
 }
 ```
@@ -210,13 +238,16 @@ const { getPty, spawnPty } = require('@mmmbuto/pty-termux-utils');
 module.exports = { getPty, spawnPty };
 ```
 
-## Environment Detection
+## Behavior Matrix
 
-The library detects Android/Termux via:
-- `process.platform === 'android'`
-- `process.env.PREFIX?.includes('com.termux')`
-
-On non-Android platforms, native PTY is skipped and `getPty()` returns `null`.
+| Platform | Arch | Termux? | Module Used | Fallback? |
+|----------|-------|----------|-------------|------------|
+| Android/Termux | arm64 | Yes | @mmmbuto/node-pty-android-arm64 | If module unavailable |
+| Linux | arm64 | No | @lydell/node-pty-linux-arm64 | If module unavailable |
+| Linux | x64 | No | Fallback (no ARM64 PTY) | Always |
+| Darwin (macOS) | arm64 | No | Fallback (no ARM64 PTY) | Always |
+| Win32 | arm64 | No | Fallback (no ARM64 PTY) | Always |
+| Other | Any | No | Fallback | Always |
 
 ## Error Handling
 
@@ -232,13 +263,14 @@ On non-Android platforms, native PTY is skipped and `getPty()` returns `null`.
 ## Performance
 
 - `getPty()` is memoized — only loads module once per process
-- Dynamic import only on Android/Termux
-- Minimal overhead on non-Android platforms
+- Dynamic import only on supported platforms
+- Minimal overhead on unsupported platforms
 - Debug logging only when `PTY_DEBUG=1`
 
 ## Related Projects
 
 - **`@mmmbuto/node-pty-android-arm64`** — Native PTY module for Termux
+- **`@lydell/node-pty-linux-arm64`** — Native PTY module for Linux ARM64
 - **`gemini-cli-termux`** — Gemini CLI using this library
 - **`qwen-code-termux`** — Qwen CLI using this library
 - **`nexuscli`** — Multi-model CLI using this library

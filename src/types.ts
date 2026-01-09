@@ -20,7 +20,14 @@ export interface IPty {
   kill(): void;
 }
 
-export type PtyImplementation = { module: IPtyNativeImplementation; name: 'mmmbuto-node-pty' } | null;
+export type PtyProviderName =
+  | 'mmmbuto-node-pty'
+  | 'lydell-node-pty-linux-arm64';
+
+export type PtyImplementation = {
+  module: IPtyNativeImplementation;
+  name: PtyProviderName;
+} | null;
 
 export interface IPtyAdapter {
   spawn(file: string, args: string[], options: IPtySpawnOptions): IPtyAdapterProcess;
