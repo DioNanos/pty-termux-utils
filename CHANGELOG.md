@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.4] - 2026-01-09
+### Fixed
+- Normalize repository URL to avoid npm publish warning
+
 ## [1.1.3] - 2026-01-09
 ### Fixed
 - Correct CJS build output (convert ESM imports/exports properly)

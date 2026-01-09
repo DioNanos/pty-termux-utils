@@ -48,7 +48,7 @@ process.platform === 'linux' && process.arch === 'arm64'
 ## Installation
 
 ```bash
-npm install @mmmbuto/pty-termux-utils@1.1.3
+npm install @mmmbuto/pty-termux-utils@1.1.4
 ```
 
 ### Optional Native PTY
@@ -197,7 +197,7 @@ Create a fallback adapter using `child_process`.
 
 1. Add dependency:
 ```bash
-npm install @mmmbuto/pty-termux-utils@1.1.3
+npm install @mmmbuto/pty-termux-utils@1.1.4
 ```
 
 2. Replace local `getPty.ts` with re-export:
@@ -228,7 +228,7 @@ import type { IPty } from '@mmmbuto/pty-termux-utils';
 
 1. Add dependency:
 ```bash
-npm install @mmmbuto/pty-termux-utils@1.1.3
+npm install @mmmbuto/pty-termux-utils@1.1.4
 ```
 
 2. Create wrapper:
