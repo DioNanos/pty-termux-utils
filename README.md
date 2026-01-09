@@ -279,6 +279,11 @@ module.exports = { getPty, spawnPty };
 
 - **[Architecture Guide](./docs/PTY_ARCHITECTURE.md)** — Detailed architecture and integration guide
 
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history.
+
 ## License
 
 MIT
