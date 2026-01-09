@@ -27,8 +27,9 @@ const loadProvider = async (
     logDebug('Native module loaded:', moduleName);
     return { module: impl, name };
   } catch (e) {
-    if (e instanceof Error && e.code !== 'MODULE_NOT_FOUND') {
-      logError('Unexpected error loading native module:', e);
+    const err = e as NodeJS.ErrnoException;
+    if (err && err.code !== 'MODULE_NOT_FOUND') {
+      logError('Unexpected error loading native module:', err);
     }
     return null;
   }

@@ -11,7 +11,7 @@ export class PtyAdapterProcess implements IPtyAdapterProcess {
 
   constructor(proc: ReturnType<typeof spawn>) {
     this.process = proc;
-    this.pid = proc.pid;
+    this.pid = proc.pid ?? -1;
 
     proc.stdout?.on('data', (data: Buffer) => {
       this.dataListeners.forEach(listener => listener(data.toString()));
