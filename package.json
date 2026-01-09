@@ -20,6 +20,13 @@
     "@types/node": "^20.0.0",
     "typescript": "^5.0.0"
   },
+  "scripts": {
+    "build": "tsc",
+    "build:cjs": "node scripts/build-cjs.cjs",
+    "postbuild": "npm run build:cjs",
+    "prepare": "npm run build && npm run build:cjs",
+    "prepublishOnly": "npm run build && npm run build:cjs"
+  },
   "files": [
     "dist",
     "README.md",
