@@ -1,6 +1,6 @@
 {
   "name": "@mmmbuto/pty-termux-utils",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Shared PTY utilities for Termux/Android with graceful fallback",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
