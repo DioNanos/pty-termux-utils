@@ -286,4 +286,5 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 ## License
 
-MIT
+MIT License — Copyright (c) 2026 Davide A. Guglielmi<br>
+Made in Italy 🇮🇹
