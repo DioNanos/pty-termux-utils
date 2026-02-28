@@ -14,7 +14,6 @@
 
 [![npm](https://img.shields.io/npm/v/@mmmbuto/pty-termux-utils?style=flat-square&logo=npm)](https://www.npmjs.com/package/@mmmbuto/pty-termux-utils)
 [![downloads](https://img.shields.io/npm/dt/@mmmbuto/pty-termux-utils?style=flat-square)](https://www.npmjs.com/package/@mmmbuto/pty-termux-utils)
-[![ko-fi](https://img.shields.io/badge/☕_Support-Ko--fi-FF5E5B?style=flat-square&logo=ko-fi)](https://ko-fi.com/dionanos)
 
 ---
 
