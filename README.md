@@ -286,5 +286,5 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 ## License
 
 MIT License (declared in `package.json`).<br>
-Copyright (c) 2026 Davide A. Guglielmi<br>
+Copyright (c) 2026 WellaNet.Dev<br>
 Made in Italy 🇮🇹
