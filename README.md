@@ -288,3 +288,13 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 MIT License (declared in `package.json`).<br>
 Copyright (c) Davide A. Guglielmi<br>
 Made in Italy 🇮🇹
+
+---
+
+## Contact
+
+Maintained by [DioNanos](https://github.com/DioNanos).
+
+- General / dev: **dev@mmmbuto.com**
+- Security disclosures: **security@mmmbuto.com**
+- Project hub: <https://mmmbuto.com>
