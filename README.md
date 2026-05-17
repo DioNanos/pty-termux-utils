@@ -285,7 +285,7 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 ## License
 
-MIT License (declared in `package.json`).<br>
+Apache-2.0. See [LICENSE](LICENSE).<br>
 Copyright (c) Davide A. Guglielmi<br>
 Made in Italy 🇮🇹
 
